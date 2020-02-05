@@ -1,0 +1,9 @@
+
+body {
+  font-family: 'SF Pro Text', 'SF Pro Icons', system-ui, 'Helvetica Neue', 'Helvetica';
+  font-size: 1rem;
+  padding: 20px 20px 60px;
+  max-width: 550px;
+  margin: 0 auto;
+}
+
