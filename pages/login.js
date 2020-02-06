@@ -24,6 +24,9 @@ const Login = () => {
         return r.json();
       })
       .then((data) => {
+        if (data && data.error) {
+          setLoginError(data.message);
+        }
         if (data && data.token) {
           //set cookie
           cookie.set('token', data.token, {expires: 2});
@@ -47,6 +50,7 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <input type="submit" value="Submit" />
+      {loginError && <p style={{color: 'red'}}>{loginError}</p>}
     </form>
   );
 };

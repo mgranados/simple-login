@@ -42,16 +42,16 @@ export default (req, res) => {
 
       findUser(db, email, function(err, user) {
         if (err) {
-          res.status(500).end('Error finding user');
+          res.status(500).json({error: true, message: 'Error finding User'});
           return;
         }
         if (!user) {
-          res.status(404).end('User not found');
+          res.status(404).json({error: true, message: 'User not found'});
           return;
         } else {
           authUser(db, email, password, user.password, function(err, match) {
             if (err) {
-              res.status(500).send('Server error matching password');
+              res.status(500).json({error: true, message: 'Auth Failed'});
             }
             if (match) {
               const token = jwt.sign(
@@ -64,7 +64,7 @@ export default (req, res) => {
               res.status(200).json({token});
               return;
             } else {
-              res.status(401).send('Auth Failed');
+              res.status(401).json({error: true, message: 'Auth Failed'});
               return;
             }
           });
