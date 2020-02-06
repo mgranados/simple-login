@@ -44,7 +44,7 @@ export default (req, res) => {
       assert.notEqual(null, req.body.email, 'Email required');
       assert.notEqual(null, req.body.password, 'Password required');
     } catch (bodyError) {
-      res.status(403).send(bodyError.message);
+      res.status(403).json({error: true, message: bodyError.message});
     }
 
     // verify email does not exist already
@@ -57,7 +57,8 @@ export default (req, res) => {
 
       findUser(db, email, function(err, user) {
         if (err) {
-          res.status(500).end('Error finding User');
+          res.status(500).json({error: true, message: 'Error finding User'});
+          return;
         }
         if (!user) {
           // proceed to Create
@@ -77,7 +78,7 @@ export default (req, res) => {
           });
         } else {
           // User exists
-          res.status(403).send('Email exists');
+          res.status(403).json({error: true, message: 'Email exists'});
           return;
         }
       });
