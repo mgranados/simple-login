@@ -7,3 +7,8 @@ body {
   margin: 0 auto;
 }
 
+form label {
+  display: flex;
+  justify-content: space-between;
+  max-width: 220px;
+}

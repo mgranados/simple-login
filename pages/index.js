@@ -35,7 +35,13 @@ function Home() {
           </button>
         </>
       )}
-      {!loggedIn && <Link href="/login">Login</Link>}
+      {!loggedIn && (
+        <>
+          <Link href="/login">Login</Link>
+          <p>or</p>
+          <Link href="/signup">Sign Up</Link>
+        </>
+      )}
     </div>
   );
 }
