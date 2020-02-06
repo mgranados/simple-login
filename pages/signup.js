@@ -22,8 +22,10 @@ const Signup = () => {
     })
       .then((r) => r.json())
       .then((data) => {
-        if (data.userId) {
-          Router.push('/login');
+        if (data && data.token) {
+          //set cookie
+          cookie.set('token', data.token, {expires: 2});
+          Router.push('/');
         }
       });
   }
