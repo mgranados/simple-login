@@ -4,8 +4,9 @@
 .env
 .env.build
 # .pem files
-.pem
-.key
+ptestaffing.local+5.pem
+ptestaffing.local+5-key.pem
+rootCA.key
 token.json
 # Dependency directories
 node_modules/
