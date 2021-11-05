@@ -3,6 +3,10 @@
 # dotenv environment variables file (build for Zeit Now)
 .env
 .env.build
+# .pem files
+.pem
+.key
+token.json
 # Dependency directories
 node_modules/
 # Logs

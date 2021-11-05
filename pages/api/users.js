@@ -1,5 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const uuid = require('uuid-random');
+const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 const v4 = require('uuid').v4;
 const jwt = require('jsonwebtoken');
@@ -19,14 +21,40 @@ function findUser(db, email, callback) {
   collection.findOne({email}, callback);
 }
 
-function createUser(db, email, password, callback) {
+async function createUser(db, firstName, lastName, email, password, callback) {
   const collection = db.collection('user');
+  const confirmationCode = uuid();
+
+  let transporter = nodemailer.createTransport({
+    host: "smtp-relay.gmail.com",
+    port: 587,
+    requireTLS: true,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: "management@ptestaffing.com", 
+      pass: "PTES2021!",
+    },
+  });
+  
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: '<management@ptestaffing.com>', // sender address
+    to: "marcoswade@gmail.com", // list of recipients
+    subject: "Hello ✔", // Subject line
+    text: "Hello world?", // plain text body
+    html: `<a href="https://www.ptestaffing.com">${confirmationCode}</a>`, // html body
+  });
+  console.log("info: %s", info.messageId);
+
   bcrypt.hash(password, saltRounds, function(err, hash) {
-    // Store hash in your password DB.
+
     collection.insertOne(
       {
         userId: v4(),
+        firstName,
+        lastName,
         email,
+        confirmationCode,
         password: hash,
       },
       function(err, userCreated) {
@@ -41,6 +69,8 @@ export default (req, res) => {
   if (req.method === 'POST') {
     // signup
     try {
+      assert.notEqual(null, req.body.lastName, 'Last Name required');
+      assert.notEqual(null, req.body.firstName, 'First Name required');
       assert.notEqual(null, req.body.email, 'Email required');
       assert.notEqual(null, req.body.password, 'Password required');
     } catch (bodyError) {
@@ -52,8 +82,7 @@ export default (req, res) => {
       assert.equal(null, err);
       console.log('Connected to MongoDB server =>');
       const db = client.db(dbName);
-      const email = req.body.email;
-      const password = req.body.password;
+      const { email, password, firstName, lastName } = req.body;
 
       findUser(db, email, function(err, user) {
         if (err) {
@@ -62,11 +91,11 @@ export default (req, res) => {
         }
         if (!user) {
           // proceed to Create
-          createUser(db, email, password, function(creationResult) {
+          createUser(db, firstName, lastName, email, password, function(creationResult) {
             if (creationResult.ops.length === 1) {
-              const user = creationResult.ops[0];
+              const { userId, email, firstName, lastName } = creationResult.ops[0];
               const token = jwt.sign(
-                {userId: user.userId, email: user.email},
+                {userId, email, firstName, lastName },
                 jwtSecret,
                 {
                   expiresIn: 3000, //50 minutes
