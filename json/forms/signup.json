@@ -22,6 +22,14 @@
         }
     },
     {
+        "type": "text",
+        "name": "profileId",
+        "label": "Profie ID",
+        "required": true,
+        "error": "",
+        "validation": {}
+    },
+    {
         "type": "email",
         "name": "email",
         "label": "Email",

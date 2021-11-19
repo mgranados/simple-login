@@ -12,6 +12,7 @@
     "testing": "node server.js"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "bcrypt": "^5.0.0",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",

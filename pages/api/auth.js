@@ -6,7 +6,7 @@ const jwtSecret = 'SUPERSECRETE20220';
 
 const saltRounds = 10;
 const url = 'mongodb://localhost:27017';
-const dbName = 'simple-login-db';
+const dbName = 'ptestaffing';
 
 const client = new MongoClient(url, {
   useNewUrlParser: true,
@@ -15,7 +15,7 @@ const client = new MongoClient(url, {
 
 function findUser(db, email, callback) {
   const collection = db.collection('user');
-  collection.findOne({email}, callback);
+  collection.findOne({ email }, callback);
 }
 
 function authUser(db, email, password, hash, callback) {
@@ -40,7 +40,10 @@ export default (req, res) => {
       const email = req.body.email;
       const password = req.body.password;
 
+      console.log({ body: req.body })
+
       findUser(db, email, function(err, user) {
+        console.log({ err, user })
         if (err) {
           res.status(500).json({error: true, message: 'Error finding User'});
           return;

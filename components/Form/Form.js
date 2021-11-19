@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Input from '../Input/Input';
+import axios from 'axios';
 import Router from 'next/router';
 import cookie from 'js-cookie';
+import Input from '../Input/Input';
 
 export const Form = ({ inputs, title, route }) => {
     if (!inputs || !Array.isArray(inputs) || !inputs.length) return null;
@@ -59,25 +60,21 @@ export const Form = ({ inputs, title, route }) => {
         }, true);
 
         if (!isValid) return;
-    
-        fetch(`/api/${route}`, {
+
+        axios({
             method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(postFields),
+            url: `/api/${route}`,
+            data: postFields
+        }).then(({ data }, err) => {
+              if (data && data.error) {
+                setFormError(data.message);
+              }
+              if (data && data.token) {
+                //set cookie
+                cookie.set('token', data.token, {expires: 2});
+                Router.push('/');
+              }
         })
-        .then((r) => r.json())
-        .then((data) => {
-          if (data && data.error) {
-            setFormError(data.message);
-          }
-          if (data && data.token) {
-            //set cookie
-            cookie.set('token', data.token, {expires: 2});
-            Router.push('/');
-          }
-        });
     }
 
     const renderInputs = () => 
