@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+        "~components": ["components/index"],
+        "~components/*": ["components/*"],
+        "~json": ["json/index"],
+        "~middleware": ["middleware/index"],
+        "~models": ["models/index"],
+        "~pages": ["pages/index"]
+        }
+    }
+}

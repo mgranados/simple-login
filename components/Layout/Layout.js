@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import fetch from 'isomorphic-unfetch';
 import useSWR from 'swr';
 import cookie from 'js-cookie';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
+import { Header, Footer } from '~components';
+
+export const UserContext = createContext({});
 
 const Layout = ({ children }) => {
-    const {data, revalidate} = useSWR('/api/me', async function(args) {
+    const { query: { alert } } = useRouter();
+    const {data = {}, revalidate} = useSWR('/api/me', async function(args) {
         const res = await fetch(args);
         return res.json(); 
     })
@@ -15,15 +18,15 @@ const Layout = ({ children }) => {
 
     if (!data) return <h1>Loading...</h1>;
     
-    let loggedIn = !!data.email;
+    let loggedIn = !!data.profileId;
 
     return (
-        <>
+        <UserContext.Provider value={data}>
             <Header />
-            <p>you are {!loggedIn && 'not '}logged in.</p>
+            {!!alert && <p>{alert}</p>}
             {children}
             <Footer cookie={cookie} revalidate={revalidate} />
-        </>
+        </UserContext.Provider>
     );
 };
 

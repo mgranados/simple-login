@@ -19,6 +19,6 @@ app.prepare().then(() => {
         handle(req, res, parsedUrl);
     }).listen(port, (err) => {
         if (err) throw err;
-        console.log("ready - started server on url: https://localhost:" + port);
+        console.log("ready - started server on url: https://local.ptestaffing.com:" + port);
     });
 });

@@ -6,15 +6,17 @@
   "author": "Martin Granados Garcia",
   "license": "MIT",
   "scripts": {
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
     "start": "next start",
-    "testing": "node server.js"
+    "testing": "next"
   },
   "dependencies": {
     "axios": "^0.24.0",
     "bcrypt": "^5.0.0",
+    "dicer": "^0.3.0",
     "express": "^4.17.1",
+    "formidable": "^2.0.1",
     "fs": "^0.0.1-security",
     "googleapis": "39",
     "heroku-ssl-redirect": "^0.1.1",
@@ -23,6 +25,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.2",
     "next": "^9.3.2",
+    "next-connect": "^0.11.0",
     "nodemailer": "^6.6.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

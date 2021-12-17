@@ -1,59 +1,24 @@
-import React, {useState} from 'react';
-import Router from 'next/router';
+import React, { useState } from 'react';
 import cookie from 'js-cookie';
+import Router from 'next/router';
+import loginForm from '../json/forms/login.json';
+import { Form } from '~components';
 
-const Login = () => {
-  const [loginError, setLoginError] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const ROUTE = '/api/auth';
+const handleData = ({ data }) => {
+  const { error, token } = data || {};
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    //call api
-    fetch('/api/auth', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    })
-      .then((r) => {
-        return r.json();
-      })
-      .then((data) => {
-        if (data && data.error) {
-          setLoginError(data.message);
-        }
-        if (data && data.token) {
-          //set cookie
-          cookie.set('token', data.token, {expires: 2});
-          Router.push('/');
-        }
-      });
+  if (error) console.log({error});
+  if (token) {
+    cookie.set('token', token, { expires: 2 });
+    Router.push('/');
   }
-  
-  return (
-    <form onSubmit={handleSubmit}>
-      <p>Login</p>
-      <input
-        name="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        name="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input type="submit" value="Submit" />
-      {loginError && <p style={{color: 'red'}}>{loginError}</p>}
-    </form>
-  );
 };
+
+const Login = () => (
+  <div>
+    <Form inputs={loginForm} title="Log In" route={ROUTE} handleData={handleData} />
+  </div>
+);
 
 export default Login;

@@ -24,7 +24,7 @@
     {
         "type": "text",
         "name": "profileId",
-        "label": "Profie ID",
+        "label": "Profile ID",
         "required": true,
         "error": "",
         "validation": {}

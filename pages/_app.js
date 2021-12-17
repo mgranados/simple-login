@@ -1,5 +1,5 @@
 import App from 'next/app';
-import Layout from '../components/Layout/Layout';
+import { Layout } from '~components';
 import '../styles.css';
 
 class MyApp extends App {

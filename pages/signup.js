@@ -1,13 +1,23 @@
-import React, {useState} from 'react';
-
+import React, { useState } from 'react';
+import cookie from 'js-cookie';
+import Router from 'next/router';
 import signupForm from '../json/forms/signup.json';
-import Form from '../components/Form/Form'
+import { Form } from '~components';
 
-const ROUTE = 'users';
+const ROUTE = '/api/users';
+const handleData = ({data}) => {
+  const { error, token, email } = data || {};
+
+  if (error) console.log({error});
+  if (token) {
+    cookie.set('token', token, { expires: 2 });
+    Router.push(`/confirmation?email=${email}`)
+  }
+};
 
 const Signup = () => (
   <div>
-    <Form inputs={signupForm} title="Sign Up" route={ROUTE} />
+    <Form inputs={signupForm} title="Sign Up" route={ROUTE} handleData={handleData} />
   </div>
 );
 

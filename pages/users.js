@@ -1,37 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import axios from 'axios';
+import Link from 'next/link';
+import { Redirector } from '~components';
+
+// TODO: remove unwanted fields from user data
 
 const Users = () => {
     const [userData, setUserData] = useState([]);
-    console.log({userData})
     useEffect(() => {
         let source = axios.CancelToken.source();
-        axios.get('api/users', {
+        axios.get('/api/users', {
             cancelToken: source.token
         }).then((response) => {
+            console.log(response)
             const { data: users } = response?.data;
             setUserData(users);
         });
         
-        return () => { console.log('users unmounting'); source.cancel("Cancelling in cleanup") };
+        return () => { source.cancel("Cancelling in cleanup") };
     }, []);
 
-    const userProfiles = Array.isArray(userData) && userData.length > 0 &&
-        userData.map(({ profileId, firstName, lastName, email }, index) => (
+    const userProfiles = Array.isArray(userData) && userData.length > 0 ?
+        userData.map(({ profileId, firstName, lastName, email, profilePic1 }, index) => (
             <div key={index}>
+                <div><img width={120} src={profilePic1 ? `https://drive.google.com/uc?id=${profilePic1}` : 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Placeholder_no_text.svg/1200px-Placeholder_no_text.svg.png'} /></div>
                 <div>First Name: {firstName}</div>
                 <div>Last Name: {lastName}</div>
                 <div>Email: {email}</div>
-                <div><Link href="/users/[id]" as={`/users/${profileId}`}>profilePage</Link></div>
+                <div><Link href="/users/[profileId]" as={`/users/${profileId}`}>profilePage</Link></div>
+                <div><Link href="/accounts/[accountId]" as={`/accounts/${profileId}`}>Account Page</Link></div>
             </div>
-        ));
+        ))
+        :
+        (<h1>Loading...</h1>);
 
     return (
-        <div>
-            User Profiles:
-            {userProfiles}
-        </div>
+        <Redirector>
+            <div>
+                User Profiles:
+                {userProfiles}
+            </div>
+        </Redirector>
     );
 }
 

@@ -9,11 +9,15 @@ function Home() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <h1>PTESTAFFING.COM</h1>
+      <h2>The Tri-State Area's Leading Professional Staffing Network</h2>
+      <p>
+        Our Network of Associates are Dedicated to Excellence of Service 
+        in Medical and Allied Health Care Industries, Event Consultation & Planning 
+        and Corporate & Residential Cleaning Services
+      </p>
       <Link href="/login">Login</Link>
       <p>or</p>
       <Link href="/signup">Sign Up</Link>
-      <h2>Proudly using Next.js, Mongodb and deployed with Now</h2>
-      <p>Welcome!</p>
     </div>
   );
 }
