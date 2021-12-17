@@ -60,19 +60,16 @@ apiRoute.post((req, res) => {
 
       findUser(db, email, function(err, user) {
         if (err) {
-          client.close();
           res.status(299).json({error: true, message: 'Error finding User'});
           return;
         }
         if (!user) {
-          client.close();
           res.status(200).json({error: true, message: 'User not found'});
           return;
         } else {
           const { password: userPassword, userId, profileId, emailConfirmed } = user;
           authUser(db, email, password, userPassword, function(err, match) {
             if (err) {
-              client.close();
               res.status(200).json({error: true, message: 'Auth Failed'});
             }
             if (match) {
@@ -83,10 +80,8 @@ apiRoute.post((req, res) => {
                   expiresIn: 3000, //50 minutes
                 },
               );
-              client.close();
               return res.status(200).json({token});
             } else {
-              client.close();
               res.status(200).json({error: true, message: 'Auth Failed'});
               return;
             }
