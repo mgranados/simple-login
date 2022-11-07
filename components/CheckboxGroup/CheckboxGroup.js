@@ -1,4 +1,5 @@
 import React from 'react';
+import { string, array, func} from 'prop-types';
 import { Input } from '~components';
 
 const CheckboxGroup = ({ inquiry, checkboxes, onChange, onBlur }) => {
@@ -14,5 +15,16 @@ const CheckboxGroup = ({ inquiry, checkboxes, onChange, onBlur }) => {
         </div>
     );
 };
+
+CheckboxGroup.propTypes = {
+    inquiry: string.isRequired,
+    checkboxes: array.isRequired,
+    onChange: func.isRequired,
+    onBlur: func
+}
+
+CheckboxGroup.defaultProps = {
+    onBlur: _ => _
+}
 
 export default CheckboxGroup;

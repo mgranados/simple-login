@@ -11,6 +11,6 @@ class MyApp extends App {
             </Layout>
         );
     }
-};
+}
 
 export default MyApp;

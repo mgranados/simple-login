@@ -1,7 +1,7 @@
 const nextConnect = require('next-connect');
 const mongo = require('mongodb');
-import axios from 'axios';
 const assert = require('assert');
+import { rejects } from 'assert';
 import fs from 'fs';
 import middleware from '../../../middleware/middleware';
 import { useDrive } from '../google/gapi';
@@ -24,7 +24,7 @@ const client = new mongo.MongoClient(url, {
 });
 
 const apiRoute = nextConnect({
-  onError(err, req, res, next) {
+  onError(err, req, res) {
     if (err) console.log({ err })
     return res.status(403)
   },
@@ -57,7 +57,7 @@ apiRoute.get((req, res) => {
 apiRoute.patch(({ body, files, query }, res) => {
   const { profileId, confirmationCode } = query;
 
-  if (!!confirmationCode) {
+  if (confirmationCode) {
     client.connect((err) => {
       assert.equal(null, err);
       const db = client.db(dbName);
@@ -70,7 +70,7 @@ apiRoute.patch(({ body, files, query }, res) => {
           { confirmationCode }, 
           { $set: { emailConfirmed: true } }, 
           { upsert: true }, 
-          (err, data) => {
+          () => {
           const token = jwt.sign(
             { userId, email, profileId, emailConfirmed: true },
             jwtSecret,
@@ -115,7 +115,7 @@ apiRoute.patch(({ body, files, query }, res) => {
     const fieldData = fileKeys.map((name) => {
       const { mimeType, filepath } = files[name];
       return new Promise((resolve) => {
-        useDrive(async (drive) => {
+        useDrive((drive) => {
           const fileMetadata = {
             name: `${firstName} ${lastName} ${name}`,
             mimeType
@@ -124,12 +124,15 @@ apiRoute.patch(({ body, files, query }, res) => {
             mimeType,
             body: fs.createReadStream(filepath)
           };
-          const file = await drive.files.create({
+          drive.files.create({
             resource: fileMetadata,
             media: media,
             fields: 'id'
           }, (err, file) => {
-            if (err) console.log({ err });
+            if (err) {
+              console.log({ err });
+              rejects({ err })
+            }
             const id = file?.data?.id;
             resolve([name, id]);
           });
@@ -139,10 +142,10 @@ apiRoute.patch(({ body, files, query }, res) => {
     Promise.all(fieldData).then(async (values) => {
       collection.findOne({ profileId }).then((user) => {
         const deletedFiles = values.map(([fieldname, id]) => {
-          return new Promise(async (resolve) => {
+          return new Promise((resolve) => {
             if (user[fieldname] && user[fieldname] !== id) {
               useDrive((drive) => {
-                  drive.files.delete({ fileId: user[fieldname] }, (err, data) => {
+                  drive.files.delete({ fileId: user[fieldname] }, (err) => {
                     if (err) console.log( err );
                     console.log(`'image ${user[fieldname]} deleted'`);
                     updateFields[fieldname] = id;

@@ -70,8 +70,8 @@ function getNewToken(oAuth2Client, apiType, callback) {
   });
   console.log('Authorize this app by visiting this url:', authUrl);
   const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
+    input: process.stdin, // eslint-disable-line no-undef
+    output: process.stdout, // eslint-disable-line no-undef
   });
   rl.question('Enter the code from that page here: ', (code) => {
     rl.close();

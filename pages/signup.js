@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import cookie from 'js-cookie';
 import Router from 'next/router';
 import signupForm from '../json/forms/signup.json';

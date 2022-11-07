@@ -2,15 +2,12 @@ const nextConnect = require('next-connect');
 const mongo = require('mongodb');
 const assert = require('assert');
 const uuid = require('uuid-random');
-const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 const v4 = require('uuid').v4;
 const jwt = require('jsonwebtoken');
-import  { sendMail } from '../../controllers/mailController';
-import formidable from 'formidable';
+// import  { sendMail } from '../../controllers/mailController';
 const jwtSecret = 'SUPERSECRETE20220';
 import middleware from '../../middleware/middleware';
-import { useDrive } from '../api/google/gapi';
 
 export const config = {
   api: {
@@ -58,7 +55,7 @@ function createUser(db, firstName, lastName, email, password, profileId, callbac
 }
 
 const apiRoute = nextConnect({
-  onError(err, req, res, next) {
+  onError(err, req, res) {
     if (err) console.log({ err })
     return res.status(403)
   },
@@ -97,7 +94,7 @@ apiRoute.post((req, res) => {
         
         createUser(db, firstName, lastName, email, password, profileId, function({ ops, ops: [createdUser] }) {
           if (ops.length === 1) {
-            const { userId, email, firstName, lastName, profileId, confirmationCode, emailConfirmed } = createdUser;
+            const { userId, email, firstName, lastName, profileId, /*confirmationCode, */emailConfirmed } = createdUser;
             const token = jwt.sign(
               {userId, email, firstName, lastName, profileId, emailConfirmed },
               jwtSecret,
@@ -106,20 +103,20 @@ apiRoute.post((req, res) => {
               },
             );
 
-            const emailData = {
-              from: '<management@ptestaffing.com>',
-              to: email,
-              subject: "PTEStaffing Registration test ✔",
-              message: `
-                Please go to the link below to confirm your account\n
-                https://local.ptestaffing.com:3000/confirmation?confirmationCode=${confirmationCode}&profileId=${profileId}
-              `
-            };
-
-            sendMail(emailData, (data) => { 
-              res.status(200).json({token, email});
-              return;
-            });
+            // const emailData = {
+            //   from: '<management@ptestaffing.com>',
+            //   to: email,
+            //   subject: "PTEStaffing Registration test ✔",
+            //   message: `
+            //     Please go to the link below to confirm your account\n
+            //     https://local.ptestaffing.com:3000/confirmation?confirmationCode=${confirmationCode}&profileId=${profileId}
+            //   `
+            // };
+            res.status(200).json({token, email});
+            return;
+            // sendMail(emailData, (data) => { 
+            //   return;
+            // });
           }
         });
       } else {

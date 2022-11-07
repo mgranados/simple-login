@@ -20,7 +20,7 @@ const client = new mongo.MongoClient(url, {
 });
 
 const apiRoute = nextConnect({
-  onError(err, req, res, next) {
+  onError(err, req, res) {
     if (err) console.log({ err })
     return res.status(403)
   },

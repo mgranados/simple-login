@@ -13,7 +13,7 @@ const Users = () => {
             cancelToken: source.token
         }).then((response) => {
             console.log(response)
-            const { data: users } = response?.data;
+            const users = response?.data?.data;
             setUserData(users);
         });
         

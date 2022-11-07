@@ -26,12 +26,12 @@ function findUser(db, email, callback) {
 }
 
 function authUser(db, email, password, hash, callback) {
-  const collection = db.collection('user');
+  // const collection = db.collection('user');
   bcrypt.compare(password, hash, callback);
 }
 
 const apiRoute = nextConnect({
-  onError(err, req, res, next) {
+  onError(err, req, res) {
     if (err) console.log({ err })
     return res.status(403)
   },

@@ -64,7 +64,7 @@ const User = () => {
           {address2 && <div>{address2}</div>}
           {(city || state || zip) && <div>{`${city}, ${state} ${zip}`}</div>}
         </div>
-        {resume && <h3><a href={`https://drive.google.com/uc?id=${resume}`} target="_blank">resume</a></h3>}
+        {resume && <h3><a href={`https://drive.google.com/uc?id=${resume}`} target="_blank" rel="noreferrer">resume</a></h3>}
       </Redirector>
     );
 }

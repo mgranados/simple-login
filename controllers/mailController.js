@@ -1,4 +1,5 @@
 import { useGmail } from '../pages/api/google/gapi';
+const Buffer = require('safer-buffer').Buffer;
 
 function makeBody(to, from, subject, message) {
     const str = ["Content-Type: text/plain; charset=\"UTF-8\"\n",
@@ -10,7 +11,7 @@ function makeBody(to, from, subject, message) {
         message
     ].join('');
 
-    const encodedMail = new Buffer(str).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
+    const encodedMail = Buffer(str).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
     return encodedMail;
 }
 
@@ -23,9 +24,7 @@ export const sendMail = ({ to = '', from = '', subject = '', message = '' }, cal
         gmail.users.messages.send({
             auth,
             userId: 'me',
-            resource: {
-                raw: raw
-            }
+            resource: { raw }
         }, function(err, data) {
             callback(err || data)
         });

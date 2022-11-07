@@ -1,3 +1,5 @@
+import { shape, func } from 'prop-types';
+
 const Footer = ({ revalidate, cookie }) =>
 (
     <p>
@@ -10,4 +12,12 @@ const Footer = ({ revalidate, cookie }) =>
         </button>
     </p>
 );
+
+Footer.propTypes = {
+    revalidate: func.isRequired,
+    cookie: shape({
+        remove: func
+    }).isRequired
+}
+
 export default Footer;

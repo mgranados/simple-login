@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Link from 'next/link';
 
 function Healthcare() {
   return (
@@ -39,7 +38,6 @@ function Healthcare() {
 
             Digital Advertising Solutions 
 
-            ​​
 
             Hospitality
 
@@ -63,25 +61,18 @@ function Healthcare() {
 
             Trade Experts
 
-            ​
-
-            ​
-
             Medical Clinicians and Allied Health Care
 
-            RN's
+            RN&apos;s
 
-            CNS's
+            CNS&apos;s
 
-            NP's
+            NP&apos;s
 
-            LPN's
+            LPN&apos;s
 
             Allied Health Care Providers
 
-            ​
-
-            
 
             Whether at home, on location or at the office. We truly understand what it takes to create life long memories and the long term success you or your organization deserves
         </p>

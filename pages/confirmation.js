@@ -1,7 +1,5 @@
-import { useEffect } from 'react';
 import axios from 'axios';
 import Head from 'next/head';
-import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import cookie from 'js-cookie';
 
@@ -15,7 +13,7 @@ function Confirmation() {
     if (confirmationCode) {
         axios
         .patch(`/api/users/${profileId}?confirmationCode=${confirmationCode}`)
-        .then(({ data: { email, token, error } }) => {
+        .then(({ data: { token, error } }) => {
             if (error) console.log({error});
             if (token) {
                 cookie.set('token', token, { expires: 2 });

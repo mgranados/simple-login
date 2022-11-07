@@ -1,10 +1,6 @@
 const nextConnect = require('next-connect');
-const mongo = require('mongodb');
-const assert = require('assert');
-import fs from 'fs';
 import middleware from '../../middleware/middleware';
 import { sendMail } from '../../controllers/mailController';
-const nodemailer = require("nodemailer");
 
 export const config = {
   api: {
@@ -12,16 +8,8 @@ export const config = {
   },
 }
 
-const url = 'mongodb://localhost:27017';
-const dbName = 'ptestaffing';
-
-const client = new mongo.MongoClient(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
 const apiRoute = nextConnect({
-  onError(err, req, res, next) {
+  onError(err, req, res) {
     if (err) console.log({ err })
     return res.status(403)
   },

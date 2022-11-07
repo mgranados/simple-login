@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Router, { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -10,13 +10,13 @@ const Account = () => {
 
     const { query: { accountId } } = router;
     const [userData, setUserData] = useState({});
-    const { firstName, lastName, email, confirmationCode } = userData;
+    const { firstName, lastName, email } = userData;
 
     const handleData = (response) => {
         setUserData(response?.data?.data || {});
     };
 
-    const handleFormData = (data) => {
+    const handleFormData = () => {
       Router.push(`/users/${accountId}`);
     };
 

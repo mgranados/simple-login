@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { string, bool, func } from 'prop-types';
 import axios from 'axios';
 import styles from './imageInput.module.css';
 
@@ -42,7 +43,7 @@ export const ResumeInput = ({
         e.preventDefault();
         axios
             .delete(`/api/uploads?fileId=${fileId}&filename=${name}`)
-            .then(({ data }) => { 
+            .then(() => { 
                 console.log('Deleted File!')
                 window.location.reload();
             });
@@ -52,15 +53,14 @@ export const ResumeInput = ({
     const inputWithLabel = (
             <>
                 {label && <label htmlFor={name}>{labelText}</label>}
-                <div>Current Resume: {fileId ? <a href={fileUrl} target="_blank">resume</a> : defaultResume}</div>
+                <div>Current Resume: {fileId ? <a href={fileUrl} target="_blank" rel="noreferrer">resume</a> : defaultResume}</div>
                 <input
                     className={styles.input}
-                    value={value}
+                    value={file || value}
                     onChange={changeHandler}
                     onBlur={() => onBlur(name)}
                     name={name}
                     type={type}
-                    file={file}
                     required={required}
                 />
                 {fileId && 
@@ -75,5 +75,26 @@ export const ResumeInput = ({
         </div>
     );
 };
+
+ResumeInput.propTypes = {
+    type: string.isRequired, 
+    error: string.isRequired,
+    name: string.isRequired, 
+    label: string.isRequired, 
+    value: string.isRequired, 
+    file: string.isRequired,
+    required: bool, 
+    validated: bool,
+    onChange: func, 
+    onBlur: func,
+    fileId: string.isRequired
+};
+
+ResumeInput.defaultProps = {
+    required: false,
+    vlaidated: true,
+    onChange: _ => _,
+    onBlur: _ => _
+}
 
 export default ResumeInput;

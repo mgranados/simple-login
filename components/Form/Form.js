@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
+import { string, array, func} from 'prop-types';
 import axios from 'axios';
 import { Input, CheckboxGroup } from '~components';
 
@@ -21,7 +22,7 @@ export const Form = ({ inputs, title, route, handleData, method = 'post' }) => {
     };
 
     const [fields, setFields] = useState(initFields());
-    const [formError, setFormError] = useState('');
+    const [formError] = useState('');
 
     useEffect(() => {
         window.pteTempFileIds = [];
@@ -30,7 +31,7 @@ export const Form = ({ inputs, title, route, handleData, method = 'post' }) => {
                 return new Promise((resolve) => {
                     axios
                     .delete(`/api/uploads?fileId=${fileId}`)
-                    .then(({ data }) => { 
+                    .then(() => { 
                         console.log(`deleted ${fileId}`)
                         resolve({})
                     });
@@ -46,13 +47,13 @@ export const Form = ({ inputs, title, route, handleData, method = 'post' }) => {
         window.pteTempFileIds = [...window.pteTempFileIds, fileId];
     }
     
-    const removeTempfile = (fileId) => {
-        const fileIndex = window.pteTempFileIds.indexOf(fileId);
-        if (fileIndex === -1) return;
-        const newTempFiles = [...window.pteTempFileIds];
-        newTempFiles.splice(fileIndex, 1);
-        window.pteTempFileIds = newTempfiles;
-    }
+    // const removeTempfile = (fileId) => {
+    //     const fileIndex = window.pteTempFileIds.indexOf(fileId);
+    //     if (fileIndex === -1) return;
+    //     const newTempFiles = [...window.pteTempFileIds];
+    //     newTempFiles.splice(fileIndex, 1);
+    //     window.pteTempFileIds = newTempfiles;
+    // }
 
     const fieldKeys = Object.keys(fields);
 
@@ -81,19 +82,19 @@ export const Form = ({ inputs, title, route, handleData, method = 'post' }) => {
 
     const validateField = (fieldName) => {
         const newFields = {...fields};
-        const { [fieldName]: { value, file, validation = {} } } = newFields;
+        const { [fieldName]: { value, validation = {} } } = newFields;
         newFields[fieldName].validated = Object.keys(validation).reduce((acc, validationType) => {
             if (!acc) return acc;
             switch (validationType) {
                 case "min":
-                    return value.length >= validation[validationType];
+                    return value && value.length >= validation[validationType];
                 case "max":
-                    return value.length <= validation[validationType];
+                    return value && value.length <= validation[validationType];
                 case "match":
-                    return value === newFields[validation.match].value;
+                    return value && value === newFields[validation.match].value;
                 case "pattern":
-                    const pattern = new RegExp(validation[validationType], 'i');
-                    return pattern.test(value);
+                    var pattern = new RegExp(validation[validationType], 'i');
+                    return pattern.test(value || '');
                 case "type":
                     // TODO: update file type validation 
                     return true;
@@ -118,7 +119,7 @@ export const Form = ({ inputs, title, route, handleData, method = 'post' }) => {
         const formData = new FormData();
         inputs.forEach(({ name, type, checkboxes }) => {
             if (type === 'checkboxes') {
-                const choices = checkboxes.reduce((acc, { name: checkboxName }, index) => {
+                const choices = checkboxes.reduce((acc, { name: checkboxName }) => {
                     validateField(checkboxName);
                     const { checked, value: checkboxValue } = fields[checkboxName];
 
@@ -132,7 +133,7 @@ export const Form = ({ inputs, title, route, handleData, method = 'post' }) => {
                 return;
             }
 
-            const { file, value, fileId } = fields[name];
+            const { file, value } = fields[name];
 
             if (type === 'file') {
                 formData.append(name, file);
@@ -193,5 +194,13 @@ export const Form = ({ inputs, title, route, handleData, method = 'post' }) => {
         </form>
     );
 };
+
+Form.propTypes = {
+    inputs: array.isRquired, 
+    title: string.isRquired, 
+    route: string.isRquired, 
+    handleData: func.isRquired, 
+    method: string.isRquired
+}
 
 export default Form;

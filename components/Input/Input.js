@@ -1,4 +1,5 @@
 import React from 'react';
+import { string, shape, func, bool } from 'prop-types';
 import ImageInput from './ImageInput';
 import ResumeInput from './ResumeInput';
 
@@ -46,13 +47,12 @@ export const Input = (props) => {
         ? (
             <>
                 <input
-                    value={value}
+                    value={file || value}
                     onChange={changeHandler}
                     onBlur={() => onBlur(name)}
                     name={name}
                     checked={checked}
                     type={type}
-                    file={file}
                     required={required} 
                 />
                 <span>{labelText}</span>
@@ -78,5 +78,21 @@ export const Input = (props) => {
         </div>
     );
 };
+
+Input.propTypes = {
+    type: string,
+    error: string,
+    name: string.isRequired, 
+    label: string.isRequired, 
+    value: string, 
+    required: bool, 
+    checked: bool,
+    validation: shape({}),
+    validated: bool,
+    onChange: func.isRequired, 
+    onBlur: func,
+    file: shape({}),
+    fileId: string.isRequired
+}
 
 export default Input;

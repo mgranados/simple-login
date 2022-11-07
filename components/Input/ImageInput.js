@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { string, func, bool } from 'prop-types';
 import axios from 'axios';
 import styles from './imageInput.module.css';
 
@@ -43,7 +44,7 @@ export const ImageInput = ({
         e.preventDefault();
         axios
             .delete(`/api/uploads?fileId=${fileId}&filename=${name}`)
-            .then(({ data }) => { 
+            .then(() => { 
                 console.log('Deleted Image!')
                 window.location.reload();
             });
@@ -57,12 +58,11 @@ export const ImageInput = ({
                 {label && <label htmlFor={name}>{labelText}</label>}
                 <input
                     className={styles.input}
-                    value={value}
+                    value={file || value}
                     onChange={changeHandler}
                     onBlur={() => onBlur(name)}
                     name={name}
                     type={type}
-                    file={file}
                     required={required}
                 />
                 {fileId && 
@@ -77,5 +77,27 @@ export const ImageInput = ({
         </div>
     );
 };
+
+ImageInput.propTypes = {
+    type: string.isRequired, 
+    error: string.isRequired,
+    name: string.isRequired, 
+    label: string.isRequired, 
+    value: string.isRequired, 
+    file: string,
+    required: bool, 
+    validated: bool,
+    onChange: func, 
+    onBlur: func,
+    fileId: string.isRequired
+};
+
+ImageInput.defaultProps = {
+    required: false,
+    vlaidated: true,
+    onChange: _ => _,
+    onBlur: _ => _,
+    file: ''
+}
 
 export default ImageInput;

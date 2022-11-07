@@ -1,6 +1,7 @@
 import React, { createContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import fetch from 'isomorphic-unfetch';
+import { node, string, oneOfType } from 'prop-types';
 import useSWR from 'swr';
 import cookie from 'js-cookie';
 import { Header, Footer } from '~components';
@@ -18,7 +19,7 @@ const Layout = ({ children }) => {
 
     if (!data) return <h1>Loading...</h1>;
     
-    let loggedIn = !!data.profileId;
+    // let loggedIn = !!data.profileId;
 
     return (
         <UserContext.Provider value={data}>
@@ -29,5 +30,9 @@ const Layout = ({ children }) => {
         </UserContext.Provider>
     );
 };
+
+Layout.propTypes = {
+    children: oneOfType([node, string]).isRequired
+}
 
 export default Layout;

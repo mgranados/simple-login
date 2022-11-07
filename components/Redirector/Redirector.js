@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { node, string, oneOfType } from 'prop-types';
 import Router, { useRouter } from 'next/router';
 import { UserContext } from '~components/Layout/Layout';
 
@@ -38,6 +39,10 @@ const Redirector = ({ children }) => {
             {children}
         </div>
     );
+}
+
+Redirector.propTypes = {
+    children: oneOfType([node, string]).isRequired
 }
 
 export default Redirector;
